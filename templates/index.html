@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<ul class="list-group">
+    {% for el in todo_list %}
+    <li class="list-group-item">
+        {{ el.title }}
+        {% if el.completed %}
+        ✅
+        {% else %}
+        ❌
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+
+
+<form method="post" action=" {{ url_for('add') }} ">
+    <div class=" mb-3">
+        <label class="form-label">
+            Rzecz do zrobienia
+        </label>
+        <input type="text" class="form-control" name="item_text">
+    </div>
+    <button type="submit" class="btn btn-primary mb-3">Dodaj do listy</button>
+</form>
+{% endblock %}
