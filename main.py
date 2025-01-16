@@ -1,7 +1,7 @@
 import os
 from flask import Flask, request, render_template, redirect, url_for
 from flask_security import Security, UserMixin, RoleMixin, \
-    SQLAlchemyUserDatastore, current_user, login_required
+    SQLAlchemyUserDatastore, current_user, login_required, logout_user
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -65,6 +65,12 @@ def add():
     db.session.add(new_task)
     db.session.commit()
     return redirect(url_for("index"))
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()  # Wylogowuje użytkownika
+    return redirect(url_for('login'))  # Przekierowuje na stronę logowania
    
 if __name__ == "__main__":
     # with app.app_context():
