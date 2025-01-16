@@ -3,20 +3,35 @@
 {% block content %}
 <ul class="list-group">
     {% for el in todo_list %}
-    <li class="list-group-item">
-        {{ el.title }}
-        {% if el.completed %}
-        ✅
-        {% else %}
-        ❌
-        {% endif %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+
+        <!-- Checkbox do zmiany statusu -->
+        <form method="post" action="{{ url_for('toggle_status', task_id=el.id) }}" style="display:inline;">
+            <input type="checkbox" name="completed" {% if el.completed %} checked {% endif %}
+                onchange="this.form.submit()" style="margin-right: 10px;">
+        </form>
+
+        <!-- Tytuł zadania i emotka statusu -->
+        <span class="me-auto">
+            {{ el.title }}
+            {% if el.completed %}
+            ✅
+            {% else %}
+            ❌
+            {% endif %}
+        </span>
+
+        <!-- Przycisk do usuwania zadania -->
+        <form method="post" action="{{ url_for('delete_task', task_id=el.id) }}" style="display:inline;">
+            <button type="submit" class="btn btn-danger btn-sm">Usuń</button>
+        </form>
+
     </li>
     {% endfor %}
 </ul>
 
-
 <form method="post" action=" {{ url_for('add') }} ">
-    <div class=" mb-3">
+    <div class="mb-3">
         <label class="form-label">
             Rzecz do zrobienia
         </label>
