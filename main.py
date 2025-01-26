@@ -94,7 +94,10 @@ def delete_task(task_id):
         db.session.commit()
     return redirect(url_for('index'))
 
-
+@app.route('/user/<name>')
+@login_required
+def user(name):
+    return render_template("user.html", user_name = name)
 
 if __name__ == "__main__":
     # with app.app_context():
