@@ -1,9 +1,12 @@
 import os
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for, flash
 from flask_security import Security, UserMixin, RoleMixin, \
     SQLAlchemyUserDatastore, current_user, login_required, logout_user
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField
+from wtforms.validators import DataRequired
 from flask_sqlalchemy import SQLAlchemy
-
+ 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///todo.db'
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'developerskie')
@@ -11,7 +14,10 @@ app.config['SECURITY_PASSWORD_SALT'] = os.environ.get('SECURITY_PASSWORD_SALT', 
 app.config['SECURITY_REGISTERABLE'] = True
 app.config['SECURITY_SEND_REGISTER_EMAIL'] = False
 
-
+# Formularz
+class TestForm(FlaskForm):
+    name = StringField("Jak masz na imię?", validators=[DataRequired()])
+    submit = SubmitField("Zatwierdź")
 
 db = SQLAlchemy(app)
 
@@ -74,7 +80,7 @@ def logout():
     logout_user()  # Wylogowuje użytkownika
     return redirect(url_for('login'))  # Przekierowuje na stronę logowania
 
-#przycisk do completed nie compited
+#przycisk do zmiany ukończenie/nieukończenia czynności
 @app.route("/toggle-status/<int:task_id>", methods=["POST"])
 @login_required
 def toggle_status(task_id):
@@ -94,10 +100,29 @@ def delete_task(task_id):
         db.session.commit()
     return redirect(url_for('index'))
 
+# Profil użytkownika
 @app.route('/user/<name>')
 @login_required
 def user(name):
     return render_template("user.html", user_name = name)
+
+# Testowy formularz
+@app.route('/form', methods=['GET', 'POST'])
+@login_required
+def form():
+    name = None
+    form = TestForm()
+    if form.validate_on_submit():
+        name = form.name.data
+        form.name.data = ''    
+        flash("Form Submitted Successfully")
+    return render_template("form.html", name=name, form=form)
+
+# Koty, koty, koty, koty
+@app.route('/kot')
+@login_required
+def kot():
+    return render_template("kot.html")
 
 if __name__ == "__main__":
     # with app.app_context():
