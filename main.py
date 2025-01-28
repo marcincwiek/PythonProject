@@ -17,8 +17,8 @@ app.config['SECURITY_SEND_REGISTER_EMAIL'] = False
 app.config['SECURITY_LOGIN_URL'] = '/login'  # URL strony logowania
 app.config['SECURITY_LOGOUT_URL'] = '/logout'  # URL wylogowania
 app.config['SECURITY_POST_LOGOUT_VIEW'] = '/login'  # Gdzie przekierować po wylogowaniu
-app.config['SECURITY_POST_LOGIN_VIEW'] = '/'  # Gdzie przekierować po zalogowaniu
-app.config['SECURITY_POST_REGISTER_VIEW'] = '/'  # Gdzie przekierować po rejestracji
+app.config['SECURITY_POST_LOGIN_VIEW'] = '/notatnik'  # Gdzie przekierować po zalogowaniu
+app.config['SECURITY_POST_REGISTER_VIEW'] = '/notatnik'  # Gdzie przekierować po rejestracji
 
 # Formularz
 class TestForm(FlaskForm):
@@ -126,7 +126,7 @@ def delete_note(note_id):
     note = Note.query.get_or_404(note_id)
     if note.user_id == current_user.get_id():
         db.session.delete(note)
-        db.session.commit()
+        db.session.commit() 
     return redirect(url_for("notatnik"))
 
 @app.route('/user/<name>')
