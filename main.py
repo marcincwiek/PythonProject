@@ -15,11 +15,7 @@ app.config['SECURITY_REGISTERABLE'] = True
 app.config['SECURITY_SEND_REGISTER_EMAIL'] = False
 
 
-# Formularz
-class TestForm(FlaskForm):
-    name = StringField("Jak masz na imię?", validators=[DataRequired()])
-    submit = SubmitField("Zatwierdź")
-
+#Inicjalizacja bazy danych
 db = SQLAlchemy(app)
 
 roles_user = db.Table(
@@ -116,17 +112,6 @@ def delete_task(task_id):
 def user(name):
     return render_template("user.html", user_name = name)
 
-# Testowy formularz
-@app.route('/form', methods=['GET', 'POST'])
-@login_required
-def form():
-    name = None
-    form = TestForm()
-    if form.validate_on_submit():
-        name = form.name.data
-        form.name.data = ''    
-        flash("Form Submitted Successfully")
-    return render_template("form.html", name=name, form=form)
 
 # Koty, koty, koty, koty
 @app.route('/kot')
