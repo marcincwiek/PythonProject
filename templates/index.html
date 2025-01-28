@@ -6,20 +6,23 @@
     <h1>Lista rzeczy do zrobienia</h1>
 </div>
 
+<!-- Sekcja dla zadań, które są wciąż do zrobienia -->
+
+{% if tasks_to_do %}
 <ul class="list-group mb-3">
-    {% for el in todo_list %}
+    {% for task in tasks_to_do %}
     <li class="list-group-item d-flex justify-content-between align-items-center">
 
         <!-- Checkbox do zmiany statusu -->
-        <form method="post" action="{{ url_for('toggle_status', task_id=el.id) }}" style="display:inline;">
-            <input type="checkbox" name="completed" {% if el.completed %} checked {% endif %}
+        <form method="post" action="{{ url_for('toggle_status', task_id=task.id) }}" style="display:inline;">
+            <input type="checkbox" name="completed" {% if task.completed %} checked {% endif %}
                 onchange="this.form.submit()" style="margin-right: 10px;">
         </form>
 
         <!-- Tytuł zadania i emotka statusu -->
         <span class="me-auto">
-            {{ el.title }}
-            {% if el.completed %}
+            {{ task.title }}
+            {% if task.completed %}
             ✅
             {% else %}
             ❌
@@ -27,18 +30,59 @@
         </span>
 
         <!-- Przycisk do usuwania zadania -->
-        <form method="post" action="{{ url_for('delete_task', task_id=el.id) }}" style="display:inline;">
+        <form method="post" action="{{ url_for('delete_task', task_id=task.id) }}" style="display:inline;">
             <button type="submit" class="btn btn-danger btn-sm">Usuń</button>
         </form>
 
     </li>
     {% endfor %}
 </ul>
+{% else %}
+<p class="text-center">Brak zadań. Dopisz co musisz zrobić poniżej!</p>
+{% endif %}
 
-<form method="post" action=" {{ url_for('add') }}">
+<!-- Formularz dodawania nowego zadania -->
+<form method="post" action="{{ url_for('add') }}">
     <div class="mb-3">
-        <input type="text" class="form-control" name="item_text" placeholder="co musze zrobić...">
+        <input type="text" class="form-control" name="item_text" placeholder="Co muszę zrobić...">
     </div>
     <button type="submit" class="btn btn-dark mb-3" style="background-color: #323232">Dodaj do listy</button>
 </form>
+
+<hr>
+
+<!-- Sekcja dla zadań ukończonych -->
+<h2 class="text-center">Ukończone</h2>
+{% if completed_tasks %}
+<ul class="list-group mb-3">
+    {% for task in completed_tasks %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+
+        <!-- Checkbox do zmiany statusu -->
+        <form method="post" action="{{ url_for('toggle_status', task_id=task.id) }}" style="display:inline;">
+            <input type="checkbox" name="completed" {% if task.completed %} checked {% endif %}
+                onchange="this.form.submit()" style="margin-right: 10px;">
+        </form>
+
+        <!-- Tytuł zadania i emotka statusu -->
+        <span class="me-auto">
+            {{ task.title }}
+            {% if task.completed %}
+            ✅
+            {% else %}
+            ❌
+            {% endif %}
+        </span>
+
+        <!-- Przycisk do usuwania zadania -->
+        <form method="post" action="{{ url_for('delete_task', task_id=task.id) }}" style="display:inline;">
+            <button type="submit" class="btn btn-danger btn-sm">Usuń</button>
+        </form>
+
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p class="text-center">Brak ukończonych zadań. Bierz się do roboty!</p>
+{% endif %}
 {% endblock %}

@@ -82,8 +82,11 @@ security = Security(app, user_datastore, render_template=custom_security_render_
 @app.route("/")
 @login_required
 def index():
-    tasks = Task.query.filter_by(user_id=current_user.get_id())
-    return render_template("index.html", todo_list=tasks)
+    # Filtrujemy zadania na podstawie statusu
+    tasks_to_do = Task.query.filter_by(user_id=current_user.get_id(), completed=False).all()
+    completed_tasks = Task.query.filter_by(user_id=current_user.get_id(), completed=True).all()
+    return render_template("index.html", tasks_to_do=tasks_to_do, completed_tasks=completed_tasks)
+
 
 @app.route("/add-task", methods=["POST"])
 @login_required
