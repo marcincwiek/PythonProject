@@ -50,7 +50,7 @@ class User(db.Model, UserMixin):
             import uuid
             self.fs_uniquifier = str(uuid.uuid4())
 
-#klasa note
+# Klasa note
 class Note(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
@@ -68,7 +68,7 @@ def index():
     completed_tasks = Task.query.filter_by(user_id=current_user.get_id(), completed=True).all()
     return render_template("index.html", tasks_to_do=tasks_to_do, completed_tasks=completed_tasks)
 
-
+# Dodanie do listy
 @app.route("/add-task", methods=["POST"])
 @login_required
 def add():
@@ -107,11 +107,10 @@ def delete_task(task_id):
     return redirect(url_for('index'))
 
 # Profil użytkownika
-@app.route('/user/<name>')
+@app.route('/user')
 @login_required
-def user(name):
-    return render_template("user.html", user_name = name)
-
+def user():
+    return render_template("user.html")
 
 # Koty, koty, koty, koty
 @app.route('/kot')
@@ -119,6 +118,7 @@ def user(name):
 def kot():
     return render_template("kot.html")
 
+# Notatnik
 @app.route("/", methods=["GET", "POST"])
 @login_required
 def notatnik():
@@ -131,6 +131,7 @@ def notatnik():
     notes = Note.query.filter_by(user_id=current_user.get_id()).all()
     return render_template("notatnik.html", notes=notes)
 
+# Usuwanie notatek
 @app.route("/delete-note/<int:note_id>", methods=["POST"])
 @login_required
 def delete_note(note_id):
@@ -140,8 +141,7 @@ def delete_note(note_id):
         db.session.commit()
     return redirect(url_for("notatnik"))
 
-
 if __name__ == "__main__":
-    # with app.app_context():
-    #     db.create_all()    
+    with app.app_context():
+        db.create_all()    
     app.run(host='0.0.0.0', port=5001, debug=True) 
