@@ -22,3 +22,19 @@ video {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     /* Lekki cień */
 }
+
+img {
+    width: 498px;
+    height: 498px;
+    border: 5px solid #333;
+    /* Czarna ramka */
+    border-radius: 10px;
+    /* Zaokrąglone rogi ramki */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    /* Lekki cień */
+}
+
+#naglowek {
+    display: flex;
+    justify-content: center;
+}
